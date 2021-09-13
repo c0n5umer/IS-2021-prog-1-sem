@@ -1,0 +1,9 @@
+﻿  Lab1.c
+D:\ITMO\IS-2021-prog-1-sem\Lab1\Lab1\Lab1.c(16,9): warning C4033: "open_file" должен возвращать значение
+  main.c
+  Создание кода
+  0 of 8 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Создание кода завершено
+  Lab1.vcxproj -> D:\ITMO\IS-2021-prog-1-sem\Lab1\Release\Lab1.exe

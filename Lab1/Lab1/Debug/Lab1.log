@@ -1,2 +1,6 @@
-﻿  main.c
+﻿  Lab1.c
+D:\ITMO\IS-2021-prog-1-sem\Lab1\Lab1\Lab1.c(16,9): warning C4033: "open_file" должен возвращать значение
+  main.c
+  Создание кода...
+D:\ITMO\IS-2021-prog-1-sem\Lab1\Lab1\Lab1.c(19): warning C4715: open_file: значение возвращается не при всех путях выполнения
   Lab1.vcxproj -> D:\ITMO\IS-2021-prog-1-sem\Lab1\Debug\Lab1.exe
