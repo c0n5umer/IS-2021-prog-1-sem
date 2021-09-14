@@ -20,12 +20,16 @@ FILE *open_file(char *filename, int bin)
 
 int count_lines(FILE* file)
 {
-	int res = 0;
+	int res = 0, flag = 0;
 	char c;
 
 	while ((c = fgetc(file)) != EOF)
 		if (c == '\n')
-			++res;
+			++res, flag = 1;
+		else
+			flag = 0;
+	if (!flag)
+		++res;
 	return res;
 }
 
@@ -47,7 +51,7 @@ int count_words(FILE* file)
 		if (c == ' ' || c == '\n' || c == '\t')
 			flag = 0;
 		else
-			if (flag == 0)
+			if (!flag)
 				flag = 1, ++res;
 	return res;
 }
