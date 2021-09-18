@@ -20,7 +20,7 @@ FILE *open_file(char *filename, int bin)
 
 int count_lines(FILE* file)
 {
-	int res = 0, flag = 0;
+	int res = 0, flag = -1;
 	char c;
 
 	while ((c = fgetc(file)) != EOF)
@@ -28,7 +28,7 @@ int count_lines(FILE* file)
 			++res, flag = 1;
 		else
 			flag = 0;
-	if (!flag)
+	if (flag == 0)
 		++res;
 	return res;
 }
