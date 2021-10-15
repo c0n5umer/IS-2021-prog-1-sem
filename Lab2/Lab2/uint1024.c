@@ -4,13 +4,18 @@
 #include <math.h>
 #include "uint1024.h"
 
+void init(uint1024_t* x)
+{
+    for (int i = 0; i < ARR_SIZE; i++)
+        x->a[i] = 0;
+}
+
 void scanf_value(uint1024_t *x)
 {
     char temp_str[STRING_SIZE];
     int i, digits = 0;
 
-    for (i = 0; i < ARR_SIZE; i++) //preparing struct
-        x->a[i] = 0;
+    init(x);
 
     for (i = 0; i < STRING_SIZE; i++)
         temp_str[i] = '\0';
@@ -36,8 +41,7 @@ uint1024_t from_uint(unsigned int x)
     uint1024_t value;
     int digits = 0;
 
-    for (int i = 0; i < ARR_SIZE; i++)
-        value.a[i] = 0;
+    init(&value);
 
     while (x > 0)
     {
@@ -72,12 +76,11 @@ uint1024_t add_op(uint1024_t x, uint1024_t y)
     unsigned long long buff = 0;
     int rank = 1;
 
-    for (int i = 0; i < ARR_SIZE; i++)
-        result.a[i] = 0;
+    init(&result);
 
     for (int i = 0; i < ARR_SIZE; i++)
     {
-        buff = x.a[i] + y.a[i] + buff;
+        buff = (long long)x.a[i] + (long long)y.a[i] + buff;
         result.a[i] = buff % MAX_INT;
         buff /= MAX_INT;
     }
@@ -99,15 +102,41 @@ uint1024_t subtr_op(uint1024_t x, uint1024_t y)
     long long buff = 0;
     int rank = 1;
 
-    for (int i = 0; i < ARR_SIZE; i++)
-        result.a[i] = 0;
+    init(&result);
 
     for (int i = 0; i < ARR_SIZE; i++)
     {
-        buff = x.a[i] - y.a[i] - buff;
+        buff = (long long)x.a[i] - (long long)y.a[i] - buff;
         result.a[i] = buff >= 0 ? buff : MAX_INT + buff;
         buff = buff >= 0 ? 0 : 1;
     }
+
+    for (int i = ARR_SIZE - 1; i >= 0; i--)
+        if (result.a[i] != 0)
+        {
+            rank = i + 1;
+            break;
+        }
+
+    result.ranks = rank;
+    return result;
+}
+
+uint1024_t mult_op(uint1024_t x, uint1024_t y)
+{
+    uint1024_t result;
+    unsigned long long buff = 0, shift = 0;
+    int rank = 1;
+
+    init(&result);
+
+    for (int i = 0; i < ARR_SIZE; i++)
+        for (int j = 0; i + j < ARR_SIZE; j++)
+        {
+            buff = result.a[i + j] + (long long)x.a[i] * (long long)y.a[j] + shift;
+            result.a[i + j] = buff % MAX_INT;
+            shift = buff / MAX_INT;;
+        }
 
     for (int i = ARR_SIZE - 1; i >= 0; i--)
         if (result.a[i] != 0)

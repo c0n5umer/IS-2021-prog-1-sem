@@ -15,3 +15,4 @@ uint1024_t from_uint(unsigned int x);
 void printf_value(uint1024_t x);
 uint1024_t add_op(uint1024_t x, uint1024_t y);
 uint1024_t subtr_op(uint1024_t x, uint1024_t y);
+uint1024_t mult_op(uint1024_t x, uint1024_t y);
