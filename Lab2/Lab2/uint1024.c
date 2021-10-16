@@ -4,6 +4,20 @@
 #include <math.h>
 #include "uint1024.h"
 
+void find_rank(uint1024_t* result)
+{
+    int rank = 1;
+
+    for (int i = ARR_SIZE - 1; i >= 0; i--)
+        if (result->a[i] != 0)
+        {
+            rank = i + 1;
+            break;
+        }
+
+    result->ranks = rank;
+}
+
 void init(uint1024_t* x)
 {
     for (int i = 0; i < ARR_SIZE; i++)
@@ -74,25 +88,17 @@ uint1024_t add_op(uint1024_t x, uint1024_t y)
 {
     uint1024_t result;
     unsigned long long buff = 0;
-    int rank = 1;
-
+    
     init(&result);
 
     for (int i = 0; i < ARR_SIZE; i++)
     {
         buff = (long long)x.a[i] + (long long)y.a[i] + buff;
-        result.a[i] = buff % MAX_INT;
-        buff /= MAX_INT;
+        result.a[i] = buff % BASE;
+        buff /= BASE;
     }
 
-    for (int i = ARR_SIZE - 1; i >= 0; i--)
-        if (result.a[i] != 0)
-        {
-            rank = i + 1;
-            break;
-        }
-
-    result.ranks = rank;
+    find_rank(&result);
     return result;
 }
 
@@ -100,51 +106,35 @@ uint1024_t subtr_op(uint1024_t x, uint1024_t y)
 {
     uint1024_t result;
     long long buff = 0;
-    int rank = 1;
 
     init(&result);
 
     for (int i = 0; i < ARR_SIZE; i++)
     {
         buff = (long long)x.a[i] - (long long)y.a[i] - buff;
-        result.a[i] = buff >= 0 ? buff : MAX_INT + buff;
+        result.a[i] = buff >= 0 ? buff : BASE + buff;
         buff = buff >= 0 ? 0 : 1;
     }
 
-    for (int i = ARR_SIZE - 1; i >= 0; i--)
-        if (result.a[i] != 0)
-        {
-            rank = i + 1;
-            break;
-        }
-
-    result.ranks = rank;
+    find_rank(&result);
     return result;
 }
 
 uint1024_t mult_op(uint1024_t x, uint1024_t y)
 {
     uint1024_t result;
-    unsigned long long buff = 0, shift = 0;
-    int rank = 1;
+    unsigned long long buff = 0, carry = 0;
 
     init(&result);
 
     for (int i = 0; i < ARR_SIZE; i++)
         for (int j = 0; i + j < ARR_SIZE; j++)
         {
-            buff = result.a[i + j] + (long long)x.a[i] * (long long)y.a[j] + shift;
-            result.a[i + j] = buff % MAX_INT;
-            shift = buff / MAX_INT;;
+            buff = result.a[i + j] + (long long)x.a[i] * (long long)y.a[j] + carry;
+            result.a[i + j] = buff % BASE;
+            carry = buff / BASE;
         }
 
-    for (int i = ARR_SIZE - 1; i >= 0; i--)
-        if (result.a[i] != 0)
-        {
-            rank = i + 1;
-            break;
-        }
-
-    result.ranks = rank;
+    find_rank(&result);
     return result;
 }

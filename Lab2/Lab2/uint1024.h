@@ -3,7 +3,7 @@
 #define ARR_SIZE 35
 #define STRING_SIZE 310
 #define INT_LEN 9
-#define MAX_INT 1000000000
+#define BASE 1000000000
 
 typedef struct {
     int a[ARR_SIZE];
