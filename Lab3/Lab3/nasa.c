@@ -9,7 +9,8 @@
 long parse_time(char* time_string)
 {
     char time_format[7] = "//::: ", parsed_time[7][6] = { "" };
-    int i = 0, time_type = 0, index = 0;
+    int i = 0, time_type = 0, index = 0, month = 0;
+    char months[12][4] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 
     while (time_string[i])
     {
@@ -20,19 +21,36 @@ long parse_time(char* time_string)
         ++i;
     }
 
+    for (int j = 0; j < 12; j++)
+        if (!strcmp(parsed_time[1], months[j]))
+            month = j;
+
     struct tm tdate = {
-        .tm_mday = atof(parsed_time[0]),
-        .tm_mon = atof(parsed_time[1]) - 1,
-        .tm_year = atof(parsed_time[2]) - 1900,
-        .tm_hour = atof(parsed_time[3]),
-        .tm_min = atof(parsed_time[4]),
-        .tm_sec = atof(parsed_time[5]),
+        .tm_mday = atoi(parsed_time[0]),
+        .tm_mon = month,
+        .tm_year = atoi(parsed_time[2]) - 1900,
+        .tm_hour = atoi(parsed_time[3]),
+        .tm_min = atoi(parsed_time[4]),
+        .tm_sec = atoi(parsed_time[5]),
         .tm_isdst = 0
     };
 
     time_t time = mktime(&tdate);
 
     return time;
+}
+
+char* transform_seconds(long timestamp)
+{
+    char time_string[TIME_STRING_SIZE];
+    int i;
+    struct tm* u;
+
+    u = localtime(&timestamp);
+    i = strftime(time_string, TIME_STRING_SIZE, "%d/%m/%Y:%H:%M:%S", u);
+    time_string[i] = '\0';
+    return time_string;
+    
 }
 
 Timestamp* add(Timestamp* head, long timestamp)
@@ -58,7 +76,7 @@ Timestamp* pop(Timestamp* tail)
 void parse(FILE* f, long* errors, long window)
 {
     char request[MAX_REQUEST_SIZE];
-    int i = 0, number = 0;
+    int number = 0;
     Timestamp* tail = NULL, * head = NULL;
     struct max {
         long left;
@@ -78,9 +96,9 @@ void parse(FILE* f, long* errors, long window)
 
         len = strlen(request);
 
-        while (request[j++] != '[' && j < MAX_REQUEST_SIZE);
+        while (j < MAX_REQUEST_SIZE && request[j++] != '[');
 
-        while (request[j] != ']' && j < MAX_REQUEST_SIZE)
+        while (j < MAX_REQUEST_SIZE && request[j] != ']')
             time_string[k++] = request[j++];
 
         time_string[k] = '\0';
@@ -116,9 +134,9 @@ void parse(FILE* f, long* errors, long window)
         }
         k = 0;
 
-        while (request[j++] != '"' && j < MAX_REQUEST_SIZE);
+        while (j < MAX_REQUEST_SIZE && request[j++] != '"');
 
-        while (request[j] != '"' && j < MAX_REQUEST_SIZE)
+        while (j < MAX_REQUEST_SIZE && request[j] != '"')
             request_body[k++] = request[j++];
 
         request_body[k] = '\0';
@@ -127,7 +145,6 @@ void parse(FILE* f, long* errors, long window)
             *errors += 1;
             printf("%s\n", request_body);
         }
-        i++;
     }
 
     if (head != NULL && tail != NULL)
@@ -143,7 +160,7 @@ void parse(FILE* f, long* errors, long window)
                 max.window = delta;
             }
     }
-
     printf("Max number of requests %d from %d to %d\n", max.number, max.left, max.right);
+    //printf("Max number of requests %d from %s to %s\n", max.number, transform_seconds(max.left), transform_seconds(max.right));
     return;
 }
