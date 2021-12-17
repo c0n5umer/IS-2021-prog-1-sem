@@ -8,16 +8,15 @@ int **bmpToPixels(FILE* f, bitMapFile bmp) {
     int width = bmp.biWidth, height = bmp.biHeight, lineLength;
     char* line;
     int** pixels;
+    int byteWidth = (width / 8) + ((width % 8 > 0) ? 1 : 0); //should be integer number of bytes
 
     /* Creating gaming pole */
     pixels = (int **)calloc(width, sizeof(int *));
     for (int i = 0; i < width; i++)
         pixels[i] = (int *)calloc(height, sizeof(int));
 
+    fseek(f, bmp.bfOffs, SEEK_SET);
     
-
-    int byteWidth = (width / 8) + ((width % 8 > 0) ? 1 : 0); //should be integer number of bytes
-
     if (byteWidth % 4 != 0)
         lineLength = byteWidth + (4 - (byteWidth % 4));
     else

@@ -7,7 +7,6 @@
 int main(int argc, char *argv[]) {
     FILE *f;
     unsigned char byte;
-    //unsigned char symb = 254, outp;
     char filename[MAX_STRING_SIZE];
     unsigned int sz;
     int files = 0, operation = 0;
@@ -18,7 +17,7 @@ int main(int argc, char *argv[]) {
         printf("--create - for creating archive and for names of source files\n");
         printf("--extract - for unpacking the archive\n");
         printf("--list - for displaying names of files in the archive\n");
-        printf("Example of the command: Lab6.exe --file data.arc --create a.txt b.bin c.bmp\n");
+        printf("Example of the command: Lab6.exe --file data.arc --create D:\\a.txt C:/b.bin c.bmp\n");
         printf("PLEASE, BUY OUR LICENSE\n");
         return 0;
     }
@@ -54,8 +53,6 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-   // printf("operation: %i, files: %i", operation, files);
-
     switch (operation) {
         case 1:
             create_archive(argv, files, filename);
@@ -67,14 +64,6 @@ int main(int argc, char *argv[]) {
             file_list(filename);
             break;
     }
-
- /*   f = fopen("data.arc","rb");
-    fread(&byte, 1, 1, f);
-    printf("\nNum of files: %i ", byte);
-    fread(&byte, 1, 1, f);
-    printf("size of filename: %i ", byte);
-    fread(&sz, sizeof(int), 1, f);
-    printf("File size: %u", sz); */
 
     return 0;
 }

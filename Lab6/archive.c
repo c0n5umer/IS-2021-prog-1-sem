@@ -73,6 +73,7 @@ int create_archive(char *argv[], int files, char *filename) {
         fread(text, 1, file_size, f);
         fwrite(text, 1, file_size, output);
         fclose(f);
+        free(text);
     }
     fclose(output);
     return 1;
@@ -111,6 +112,8 @@ int unpack_archive(char *filename) {
 
         fwrite(text, 1, file_size, f);
         fclose(f);
+        free(temp_filename);
+        free(text);
     }
     return 1;
 }
@@ -141,5 +144,6 @@ void file_list(char *filename) {
         fseek(input, file_size, SEEK_CUR);
 
         printf("Filename %i: %s\n", i, temp_filename);
+        free(temp_filename);
     }
 }
