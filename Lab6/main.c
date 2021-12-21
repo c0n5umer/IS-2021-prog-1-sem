@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
         printf("--create - for creating archive and for names of source files\n");
         printf("--extract - for unpacking the archive\n");
         printf("--list - for displaying names of files in the archive\n");
-        printf("Example of the command: Lab6.exe --file data.arc --create D:\\a.txt C:/b.bin c.bmp\n");
+        printf("Example of the command: Lab6.exe --file data.arc --create D:\\\\a.txt C:/b.bin c.bmp\n");
         printf("PLEASE, BUY OUR LICENSE\n");
         return 0;
     }
